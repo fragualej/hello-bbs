@@ -1,0 +1,266 @@
+\documentclass[11pt,letterpaper]{article}
+
+% Required packages for professional RFP documents
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{float}
+
+% Page setup
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{RFP Response}}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{\textit{Confidential and Proprietary}}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={RFP Response},
+    pdfauthor={Your Company Name},
+    pdfsubject={Request for Proposal Response},
+    pdfkeywords={RFP, proposal, response}
+}
+
+% Custom colors
+\definecolor{primaryblue}{RGB}{41, 128, 185}
+\definecolor{darkgray}{RGB}{52, 73, 94}
+
+% Section formatting
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{primaryblue}}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{darkgray}}
+  {\thesubsection}{1em}{}
+
+% Document information
+\title{\textbf{\LARGE RFP Response}\\
+       \large [Project Name/RFP Number]}
+\author{Berrybit Software SAS\\
+        Your Address\\
+        Your Contact Information}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+\newpage
+
+% Executive Summary
+\section{Executive Summary}
+\label{sec:executive-summary}
+
+This section provides a high-level overview of our proposal and key value propositions.
+
+% Company Overview
+\section{Company Overview}
+\label{sec:company-overview}
+
+Brief description of your company, capabilities, and relevant experience.
+
+% Technical Approach
+\section{Technical Approach}
+\label{sec:technical-approach}
+
+Detailed description of your proposed solution and methodology.
+
+\subsection{Methodology}
+Description of your approach and methods.
+
+\subsection{Timeline}
+Project timeline and milestones.
+
+% Team and Qualifications
+\section{Team and Qualifications}
+\label{sec:team}
+
+Information about your team members and their qualifications.
+
+% Budget and Pricing
+\section{Budget and Pricing}
+\label{sec:budget}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Item} & \textbf{Quantity} & \textbf{Cost} \\
+\midrule
+Item 1 & 1 & \$X,XXX \\
+Item 2 & 1 & \$X,XXX \\
+\midrule
+\textbf{Total} & & \textbf{\$X,XXX} \\
+\bottomrule
+\end{tabular}
+\caption{Project Budget}
+\label{tab:budget}
+\end{table}
+
+% References
+\section{References}
+\label{sec:references}
+
+Client references and testimonials.
+
+% UI Components Analysis
+\section{UI Components Analysis}
+\label{sec:ui-components}
+
+\begin{longtable}{@{}p{0.25\textwidth}p{0.55\textwidth}p{0.15\textwidth}@{}}
+\toprule
+\textbf{View} & \textbf{Components} & \textbf{LOE (Points)} \\
+\midrule
+HomeView & AppHeader & 3 \\
+         & HeroBanner & 5 \\
+         & TileGrid & 3 \\
+         & ChannelTile & 5 \\
+\midrule
+LiveShowView & AppHeader & 3 \\
+             & PlaybackControls & 8 \\
+             & ContentDetails & 5 \\
+\midrule
+SearchView & SearchBox & 2 \\
+           & Keyboard & 8 \\
+           & TileGrid & 3 \\
+           & SearchResultTile & 3 \\
+\midrule
+VodEpisodeView & AppHeader & 3 \\
+               & PlaybackControls & 8 \\
+               & ContentDetails & 5 \\
+\midrule
+VodShowView & AppHeader & 3 \\
+            & ContentDetails & 5 \\
+            & TileGrid & 3 \\
+            & EpisodeTile & 2 \\
+\midrule
+LoadingView & AppHeader & 3 \\
+            & LoadingIndicator & 2 \\
+\midrule
+ErrorView  &     & 3 \\
+\bottomrule
+\caption{UI Components Breakdown with Level of Effort}
+\label{tab:ui-components}
+\end{longtable}
+
+\subsection{Component Descriptions}
+\begin{itemize}
+    \item \textbf{AppHeader}: Reusable header component with brand logo and optional search functionality
+    \item \textbf{HeroBanner}: Promotional section for both VOD and live content discovery
+    \item \textbf{TileGrid}: Container component for organizing tiles in grid layout
+    \item \textbf{BaseTile}: Base component with common tile functionality (image, title, metadata)
+    \item \textbf{ChannelTile}: Live channel display tile with favorite indicators and "LIVE" status
+    \item \textbf{SearchResultTile}: Search result display tile with standard media metadata
+    \item \textbf{EpisodeTile}: Episode display tile with duration and episode information
+    \item \textbf{ContentDetails}: Reusable metadata display component for shows, episodes, and live streams
+    \item \textbf{PlaybackControls}: Video controls including play buttons, resume, and play all options
+    \item \textbf{SearchBox}: Display area for search terms and query results
+    \item \textbf{Keyboard}: On-screen keyboard input system for TV/remote interfaces
+    \item \textbf{LoadingIndicator}: Loading spinner with text for async operations
+\end{itemize}
+
+\subsection{Reusable Component Summary}
+\begin{center}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Component} & \textbf{Used in Views} \\
+\midrule
+AppHeader & 5 views \\
+TileGrid & 3 views \\
+BaseTile & 3 views \\
+ChannelTile & 1 view \\
+SearchResultTile & 1 view \\
+EpisodeTile & 1 view \\
+ContentDetails & 3 views \\
+PlaybackControls & 2 views \\
+LoadingIndicator & 1 view \\
+HeroBanner & 1 view \\
+SearchBox & 1 view \\
+Keyboard & 1 view \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Base Components}
+\label{sec:base-components}
+
+Base components provide the foundational building blocks for the entire application. All other components extend or utilize these base components to ensure consistency and code reuse.
+
+\begin{center}
+\begin{tabular}{@{}p{0.25\textwidth}p{0.55\textwidth}p{0.15\textwidth}@{}}
+\toprule
+\textbf{Component} & \textbf{Description} & \textbf{LOE (Points)} \\
+\midrule
+BaseComponent & Core component with common props, state management, and lifecycle methods & 5 \\
+BaseTile & Base tile component with image, title, and metadata layout & 3 \\
+BaseView & Base view component with common layout, navigation, and error handling & 8 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% Focus Handling in Roku Framework
+\section{Focus Handling in Roku Framework}
+\label{sec:focus-handling}
+
+Focus management is a critical aspect of Roku application development, as users navigate through the interface using remote control directional keys. The Roku framework provides a robust focus handling system centered around the \texttt{onKeyEvent} function.
+
+\subsection{The onKeyEvent Function}
+\label{sec:onkeyevent}
+
+The \texttt{onKeyEvent} function is the primary mechanism for handling remote control input in Roku applications. This function receives two parameters: \texttt{key} (string) containing the key name ("OK", "back", "up", "down", etc.) and \texttt{press} (boolean) indicating whether it's a press or release event. The function should return \texttt{true} to consume the event or \texttt{false} to allow it to bubble up to parent components. Always check \texttt{press = true} to handle only key press events and avoid duplicate actions.
+
+\subsection{Native Component Navigation}
+\label{sec:native-navigation}
+
+Roku's native components like \texttt{RowList}, \texttt{MarkupList}, \texttt{MarkupGrid}, \texttt{TargetGroup}, \texttt{ButtonGroup}, and \texttt{LabelList} provide built-in navigation handling that automatically manages focus transitions without requiring custom \texttt{onKeyEvent} implementations. Simply assign focus to these components using \texttt{componentName.setFocus(true)} and they will handle all directional navigation, focus boundaries, visual indicators, and scroll behavior internally. This approach reduces code complexity while ensuring consistent navigation patterns optimized for TV interfaces.
+
+% API Services
+\section{API Services}
+\label{sec:api-services}
+
+The API service layer provides structured HTTP communication and data management components for external service integration.
+
+\subsection{HttpTask}
+\label{sec:httptask}
+
+Handles individual HTTP requests with URL, headers, and request body configuration. Manages request lifecycle and response parsing for REST API calls.
+
+\subsection{HttpNode}
+\label{sec:httpnode}
+
+SceneGraph node wrapper for HTTP operations that bridges Roku's task-based architecture with HTTP functionality. Manages multiple HttpTasks and provides observable response handling.
+
+\subsection{BaseModel}
+\label{sec:basemodel}
+
+Abstract data model providing common serialization, validation, and property mapping for API response objects. Standardizes data transformation between JSON and Roku objects.
+
+\subsection{Repository}
+\label{sec:repository}
+
+Data access layer that coordinates HttpNode operations and BaseModel transformations. Implements caching, error handling, and provides clean API interface for business logic components.
+
+% Appendices
+\section{Appendices}
+\label{sec:appendices}
+
+Supporting documentation and additional materials.
+
+\end{document}

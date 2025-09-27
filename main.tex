@@ -14,6 +14,10 @@
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{float}
+\usepackage{pmboxdraw}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
 
 % Page setup
 \pagestyle{fancy}
@@ -38,21 +42,36 @@
 \definecolor{primaryblue}{RGB}{41, 128, 185}
 \definecolor{darkgray}{RGB}{52, 73, 94}
 
+% Listings configuration
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    commentstyle=\color{darkgray},
+    keywordstyle=\color{primaryblue}\bfseries,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{darkgray},
+    showstringspaces=false,
+    backgroundcolor=\color{gray!10},
+    columns=flexible
+}
+
 % Section formatting
 \titleformat{\section}
-  {\normalfont\Large\bfseries\color{primaryblue}}
-  {\thesection}{1em}{}
+    {\normalfont\Large\bfseries\color{primaryblue}}
+    {\thesection}{1em}{}
 
 \titleformat{\subsection}
-  {\normalfont\large\bfseries\color{darkgray}}
-  {\thesubsection}{1em}{}
+    {\normalfont\large\bfseries\color{darkgray}}
+    {\thesubsection}{1em}{}
 
 % Document information
-\title{\textbf{\LARGE RFP Response}\\
-       \large [Project Name/RFP Number]}
-\author{Berrybit Software SAS\\
-        Your Address\\
-        Your Contact Information}
+\title{\textbf{\LARGE Daystar Roku App}\\
+        \large [Project Name/RFP Number]}
+\author{Alejandro Gutiérrez Franco\\
+        Email: alejandrogfster@gmail.com\\
+        Cel: +57 320 244 0076\\
+        LinkedIn: \href{https://www.linkedin.com/in/fragualej}{linkedin.com/in/fragualej}}
 \date{\today}
 
 \begin{document}
@@ -64,120 +83,180 @@
 \tableofcontents
 \newpage
 
-% Executive Summary
-\section{Executive Summary}
-\label{sec:executive-summary}
+% Development Setup & Foundation
+\section{Development Setup \& Foundation}
+\label{sec:development-setup}
 
-This section provides a high-level overview of our proposal and key value propositions.
+\subsection{Version Control with Gitflow}
+The project uses Git with Gitflow branching model for organized development:
+\begin{itemize}
+    \item \textbf{Main:} Production-ready code that's live or ready for release
+    \item \textbf{Develop:} Integration branch containing latest completed features
+    \item \textbf{Feature:} Individual feature development isolated from main codebase
+    \item \textbf{Release:} Preparation branch for upcoming version deployment
+    \item \textbf{Hotfix:} Emergency fixes for critical production issues
+\end{itemize}
 
-% Company Overview
-\section{Company Overview}
-\label{sec:company-overview}
+\subsection{Development Environment}
+The project requires the following tools and technologies:
+\begin{itemize}
+    \item \textbf{BrightScript:} Core scripting language for Roku channel logic and functionality
+    \item \textbf{SceneGraph:} UI framework providing XML-based component definitions with observer patterns
+    \item \textbf{BrighterScript Compiler:} Check the entire project for syntax and program errors without needing to run on an actual Roku device
+    \item \textbf{NodeJS:} Publish Roku projects to a Roku device and manage build automation tasks
+\end{itemize}
 
-Brief description of your company, capabilities, and relevant experience.
+\subsection{Folder Distribution}
+\begin{center}
+\begin{minipage}{0.6\textwidth}
+\begin{verbatim}
+├── src/
+│   ├── manifest
+│   ├── main.brs
+│   ├── mainScene/
+│   │   ├── mainScene.xml
+│   │   └── mainScene.brs
+│   ├── components/
+│   │   ├── models/
+│   │   ├── tasks/
+│   │   ├── uiLogic/
+│   │   ├── views/
+│   │   └── widgets/
+│   ├── images/
+│   │   ├── backgrounds/
+│   │   ├── icons/
+│   │   └── splash/
+│   └── source/
+│       └── utils/
+├── build/
+│   └── compiled channel packages
+└── pkg/
+    └── distribution-ready files
+\end{verbatim}
+\end{minipage}
+\end{center}
 
-% Technical Approach
-\section{Technical Approach}
-\label{sec:technical-approach}
+The \texttt{src/} directory contains all source code including the manifest file, main entry point, SceneGraph components, and assets. The \texttt{build/} directory stores compiled packages ready for testing, while \texttt{pkg/} holds final distribution files.
 
-Detailed description of your proposed solution and methodology.
+This structure follows Roku development best practices and supports the complete development-to-deployment workflow with modern tooling.
 
-\subsection{Methodology}
-Description of your approach and methods.
+% Architecture & Design
+\section{Architecture \& Design}
+\label{sec:architecture-design}
 
-\subsection{Timeline}
-Project timeline and milestones.
+\subsection{MVC Architecture for Roku Channels}
+Roku channels follow a modified MVC pattern adapted for SceneGraph framework. The Model layer handles data management through repositories and API services. The View layer consists of SceneGraph XML components defining UI structure and layout. The Controller layer uses centralized BrightScript logic attached to MainScene for coordinating application flow and handling cross-component communication.
 
-% Team and Qualifications
-\section{Team and Qualifications}
-\label{sec:team}
+\subsection{Model Layer}
+Located in \texttt{src/components/tasks/} for HTTP communication (httpTask) and \texttt{src/components/models/} for data structures. Models handle API communication, business logic, and data serialization. BaseModel classes provide common functionality for data validation and transformation. Repository classes manage data access and caching strategies for optimal performance on Roku devices.
 
-Information about your team members and their qualifications.
+\subsection{View Layer}
+SceneGraph XML files in \texttt{src/components/views/} define the visual structure and layout. Each view component has corresponding BrightScript files for initialization and basic UI logic. Views communicate through observer patterns and field binding, maintaining separation from business logic.
 
-% Budget and Pricing
-\section{Budget and Pricing}
-\label{sec:budget}
+\subsection{Controller Layer}
+Located in \texttt{src/components/uiLogic/}, BrightScript scripts attached to MainScene manage application-wide coordination through observers. Controllers handle ItemFocused and ItemSelected events from UI components, manage ScreenStack for navigation flow between views, coordinate analytics tracking across the channel, manage TextToSpeech parsing for accessibility, and orchestrate the overall application state and transitions.
 
-\begin{table}[H]
-\centering
-\begin{tabular}{@{}lcc@{}}
-\toprule
-\textbf{Item} & \textbf{Quantity} & \textbf{Cost} \\
-\midrule
-Item 1 & 1 & \$X,XXX \\
-Item 2 & 1 & \$X,XXX \\
-\midrule
-\textbf{Total} & & \textbf{\$X,XXX} \\
-\bottomrule
-\end{tabular}
-\caption{Project Budget}
-\label{tab:budget}
-\end{table}
+This architecture ensures maintainable code organization while leveraging Roku's SceneGraph strengths for TV interface development.
 
-% References
-\section{References}
-\label{sec:references}
-
-Client references and testimonials.
 
 % UI Components Analysis
 \section{UI Components Analysis}
 \label{sec:ui-components}
 
-\begin{longtable}{@{}p{0.25\textwidth}p{0.55\textwidth}p{0.15\textwidth}@{}}
+\subsection{Base Components}
+\label{sec:base-components}
+
+Base components provide the foundational building blocks for the entire application. All other components extend or utilize these base components to ensure consistency and code reuse.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
-\textbf{View} & \textbf{Components} & \textbf{LOE (Points)} \\
+\textbf{Component} & \textbf{Description} \\
 \midrule
-HomeView & AppHeader & 3 \\
-         & HeroBanner & 5 \\
-         & TileGrid & 3 \\
-         & ChannelTile & 5 \\
-\midrule
-LiveShowView & AppHeader & 3 \\
-             & PlaybackControls & 8 \\
-             & ContentDetails & 5 \\
-\midrule
-SearchView & SearchBox & 2 \\
-           & Keyboard & 8 \\
-           & TileGrid & 3 \\
-           & SearchResultTile & 3 \\
-\midrule
-VodEpisodeView & AppHeader & 3 \\
-               & PlaybackControls & 8 \\
-               & ContentDetails & 5 \\
-\midrule
-VodShowView & AppHeader & 3 \\
-            & ContentDetails & 5 \\
-            & TileGrid & 3 \\
-            & EpisodeTile & 2 \\
-\midrule
-LoadingView & AppHeader & 3 \\
-            & LoadingIndicator & 2 \\
-\midrule
-ErrorView  &     & 3 \\
+BaseComponent & Core component with common props, state management, and lifecycle methods \\
+BaseTile & Base tile component with image, title, and metadata layout \\
+BaseView & Base view component with common layout, navigation, and error handling \\
+BaseModel & Base data model providing common serialization, validation, and property mapping for API response objects \\
+BaseTask & Base task component providing helpers, utils, and constants that extended tasks inherit \\
 \bottomrule
-\caption{UI Components Breakdown with Level of Effort}
+\end{tabular}
+\end{center}
+
+\subsection{UI Components}
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
+\toprule
+\textbf{Component} & \textbf{Description} \\
+\midrule
+AppHeader & Reusable header component with brand logo and optional search functionality \\
+HeroBanner & Promotional section for both VOD and live content discovery \\
+TileGrid & Container component for organizing tiles in grid layout \\
+BaseTile & Base component with common tile functionality (image, title, metadata) \\
+ChannelTile & Live channel display tile with favorite indicators and "LIVE" status \\
+SearchResultTile & Search result display tile with standard media metadata \\
+EpisodeTile & Episode display tile with duration and episode information \\
+ContentDetails & Reusable metadata display component for shows, episodes, and live streams \\
+PlaybackControls & Video controls including play buttons, resume, and play all options \\
+SearchBox & Display area for search terms and query results \\
+Keyboard & On-screen keyboard input system for TV/remote interfaces \\
+LoadingIndicator & Loading spinner with text for async operations \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Service Components}
+Non-visual components that provide business logic, services, and utilities throughout the application:
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
+\toprule
+\textbf{Component} & \textbf{Description} \\
+\midrule
+Repository & Data access layer coordinating HTTP operations and model transformations with caching strategies \\
+TTSManager & Accessibility service providing audio narration for UI elements and content descriptions \\
+Analytics & Tracking service for user interactions, screen views, and performance metrics \\
+CacheManager & Data caching system for API responses and content optimization \\
+AuthService & Authentication handling for user sessions and API authorization \\
+ConfigManager & Application configuration management for settings and feature flags \\
+Logger & Debugging and logging utility for development and production monitoring \\
+DeepLinkHandler & URL routing service for external link navigation and content discovery \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{View Components}
+The main UI Components table shows how each view utilizes the UI components:
+
+\begin{center}
+\small
+\begin{longtable}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
+\toprule
+\textbf{View} & \textbf{Components} \\
+\midrule
+HomeView & AppHeader, HeroBanner, TileGrid, ChannelTile \\
+\midrule
+LiveShowView & AppHeader, PlaybackControls, ContentDetails \\
+\midrule
+SearchView & SearchBox, Keyboard, TileGrid, SearchResultTile \\
+\midrule
+VodEpisodeView & AppHeader, PlaybackControls, ContentDetails \\
+\midrule
+VodShowView & AppHeader, ContentDetails, TileGrid, EpisodeTile \\
+\midrule
+LoadingView & AppHeader, LoadingIndicator \\
+\midrule
+ErrorView & Basic error display \\
+\bottomrule
+\caption{UI Components Breakdown}
 \label{tab:ui-components}
 \end{longtable}
+\end{center}
 
-\subsection{Component Descriptions}
-\begin{itemize}
-    \item \textbf{AppHeader}: Reusable header component with brand logo and optional search functionality
-    \item \textbf{HeroBanner}: Promotional section for both VOD and live content discovery
-    \item \textbf{TileGrid}: Container component for organizing tiles in grid layout
-    \item \textbf{BaseTile}: Base component with common tile functionality (image, title, metadata)
-    \item \textbf{ChannelTile}: Live channel display tile with favorite indicators and "LIVE" status
-    \item \textbf{SearchResultTile}: Search result display tile with standard media metadata
-    \item \textbf{EpisodeTile}: Episode display tile with duration and episode information
-    \item \textbf{ContentDetails}: Reusable metadata display component for shows, episodes, and live streams
-    \item \textbf{PlaybackControls}: Video controls including play buttons, resume, and play all options
-    \item \textbf{SearchBox}: Display area for search terms and query results
-    \item \textbf{Keyboard}: On-screen keyboard input system for TV/remote interfaces
-    \item \textbf{LoadingIndicator}: Loading spinner with text for async operations
-\end{itemize}
-
-\subsection{Reusable Component Summary}
 \begin{center}
+\small
 \begin{tabular}{@{}lc@{}}
 \toprule
 \textbf{Component} & \textbf{Used in Views} \\
@@ -198,28 +277,11 @@ Keyboard & 1 view \\
 \end{tabular}
 \end{center}
 
-\subsection{Base Components}
-\label{sec:base-components}
-
-Base components provide the foundational building blocks for the entire application. All other components extend or utilize these base components to ensure consistency and code reuse.
-
-\begin{center}
-\begin{tabular}{@{}p{0.25\textwidth}p{0.55\textwidth}p{0.15\textwidth}@{}}
-\toprule
-\textbf{Component} & \textbf{Description} & \textbf{LOE (Points)} \\
-\midrule
-BaseComponent & Core component with common props, state management, and lifecycle methods & 5 \\
-BaseTile & Base tile component with image, title, and metadata layout & 3 \\
-BaseView & Base view component with common layout, navigation, and error handling & 8 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-% Focus Handling in Roku Framework
-\section{Focus Handling in Roku Framework}
+% Focus Handling
+\section{Focus Handling}
 \label{sec:focus-handling}
 
-Focus management is a critical aspect of Roku application development, as users navigate through the interface using remote control directional keys. The Roku framework provides a robust focus handling system centered around the \texttt{onKeyEvent} function.
+Focus management is a critical aspect of Roku application development, as users navigate through the interface using remote control directional keys. The Roku framework provides a robust focus handling system centered around the \texttt{onKeyEvent} function and native built-in navigation.
 
 \subsection{The onKeyEvent Function}
 \label{sec:onkeyevent}
@@ -231,11 +293,76 @@ The \texttt{onKeyEvent} function is the primary mechanism for handling remote co
 
 Roku's native components like \texttt{RowList}, \texttt{MarkupList}, \texttt{MarkupGrid}, \texttt{TargetGroup}, \texttt{ButtonGroup}, and \texttt{LabelList} provide built-in navigation handling that automatically manages focus transitions without requiring custom \texttt{onKeyEvent} implementations. Simply assign focus to these components using \texttt{componentName.setFocus(true)} and they will handle all directional navigation, focus boundaries, visual indicators, and scroll behavior internally. This approach reduces code complexity while ensuring consistent navigation patterns optimized for TV interfaces.
 
+% ScreenStack Management
+\section{ScreenStack Management}
+\label{sec:screenstack}
+
+\subsection{ScreenStack Overview}
+ScreenStack is custom navigation logic that needs to be developed to manage screen transitions and maintain navigation history. It handles the back button functionality and provides a consistent navigation experience across the channel.
+
+\begin{lstlisting}[caption=ScreenStack Implementation Example]
+' Push new screen to stack
+screenData = { contentId: "12345", title: "Episode Details" }
+screenStack.Push("EpisodeScreen", screenData)
+
+' Handle back button (automatic)
+' ScreenStack automatically pops current screen on back press
+
+' Observe screen changes
+screenStack.observeField("currentScreen", "onScreenChanged")
+
+sub onScreenChanged()
+  currentScreen = m.screenStack.currentScreen
+  ' Handle screen transition logic
+end sub
+\end{lstlisting}
+
 % API Services
 \section{API Services}
 \label{sec:api-services}
 
-The API service layer provides structured HTTP communication and data management components for external service integration.
+The API service layer provides structured HTTP communication and data management components for external service integration. The flow follows a circular pattern: View $\rightarrow$ HttpNode $\rightarrow$ Repository $\rightarrow$ HttpTask $\rightarrow$ HttpNode $\rightarrow$ View.
+
+\begin{lstlisting}[caption=API Services Flow Implementation]
+' View -> HttpNode (Request)
+httpNode.request = { url: "/episodes", method: "GET" }
+
+' HttpNode -> Repository
+repository.callFunc("fetch", { httpNode: httpNode })
+
+' Repository -> HttpTask
+httpTask.requestData = {
+  url: "https://api.example.com/episodes",
+  httpNode: httpNode
+}
+
+' HttpTask processing (background)
+while true
+  msg = wait(0, m.port)
+  msgType = type(msg)
+
+  if msgType = "roSGNodeEvent"
+    ' New request - escape chars and add headers
+    request = msg.getData()
+    request.url = escapeUrl(request.url)
+    request.headers = addAuthHeaders(request.headers)
+    processRequest(request)
+
+  else if msgType = "roUrlEvent"
+    ' Response received - parse JSON and create models
+    response = ParseJson(msg.getString())
+    model = CreateContentModel(response)
+
+    ' HttpTask -> HttpNode (Response)
+    targetHttpNode.response = model
+  end if
+end while
+
+' HttpNode -> View (Response)
+sub onHttpNodeResponse()
+  m.homeView.content = m.httpNode.response.items
+end sub
+\end{lstlisting}
 
 \subsection{HttpTask}
 \label{sec:httptask}
@@ -256,6 +383,26 @@ Abstract data model providing common serialization, validation, and property map
 \label{sec:repository}
 
 Data access layer that coordinates HttpNode operations and BaseModel transformations. Implements caching, error handling, and provides clean API interface for business logic components.
+
+% Certification Process
+\section{Certification Process}
+\label{sec:certification}
+
+The Roku certification process ensures channels meet platform standards for functionality, performance, and user experience before publication to the Roku Channel Store.
+
+\subsection{Certification Requirements}
+TBD - Confirm criteria for Apps and Channels on Roku platform including:
+\begin{itemize}
+    \item Content guidelines and compliance standards
+    \item Technical performance requirements and testing protocols
+    \item User interface and accessibility compliance
+    \item Security and privacy policy adherence
+    \item Channel metadata and artwork specifications
+    \item Deep linking and search integration requirements
+\end{itemize}
+
+\subsection{Submission Process}
+The certification workflow involves channel package preparation, testing validation, and Roku review process for final approval and Channel Store publication.
 
 % Appendices
 \section{Appendices}

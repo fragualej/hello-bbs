@@ -6,7 +6,7 @@
 set -e
 
 MAIN_FILE="main.tex"
-OUTPUT_NAME="rfp-response"
+OUTPUT_NAME="main"
 BUILD_DIR="build"
 
 # Colors for output
@@ -71,17 +71,14 @@ build_document() {
     echo_info "Running final pdflatex pass..."
     pdflatex -interaction=nonstopmode -output-directory="$BUILD_DIR" -jobname="$OUTPUT_NAME" "$MAIN_FILE"
 
-    # Copy final PDF to root directory for convenience
+    # Create timestamped version in build directory
     if [ -f "$BUILD_DIR/${OUTPUT_NAME}.pdf" ]; then
-        cp "$BUILD_DIR/${OUTPUT_NAME}.pdf" "main.pdf"
-
-        # Create timestamped version in build directory
         TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
         TIMESTAMPED_NAME="$BUILD_DIR/main_${TIMESTAMP}.pdf"
         cp "$BUILD_DIR/${OUTPUT_NAME}.pdf" "$TIMESTAMPED_NAME"
 
         echo_info "Build successful! Output: $BUILD_DIR/${OUTPUT_NAME}.pdf"
-        echo_info "Copied to: main.pdf and $TIMESTAMPED_NAME"
+        echo_info "Timestamped copy: $TIMESTAMPED_NAME"
         echo_info "File size: $(ls -lh $BUILD_DIR/${OUTPUT_NAME}.pdf | awk '{print $5}')"
     else
         echo_error "Build failed! PDF not generated."

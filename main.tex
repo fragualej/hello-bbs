@@ -2,6 +2,7 @@
 
 % Required packages for professional RFP documents
 \usepackage[margin=1in]{geometry}
+\usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
@@ -20,6 +21,8 @@
 \usepackage[utf8]{inputenc}
 
 % Page setup
+\setlength{\headheight}{13.59999pt}
+\addtolength{\topmargin}{-1.59999pt}
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\textbf{RFP Response}}
@@ -44,7 +47,7 @@
 
 % Listings configuration
 \lstset{
-    basicstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\scriptsize,
     commentstyle=\color{darkgray},
     keywordstyle=\color{primaryblue}\bfseries,
     breaklines=true,
@@ -53,7 +56,8 @@
     numberstyle=\tiny\color{darkgray},
     showstringspaces=false,
     backgroundcolor=\color{gray!10},
-    columns=flexible
+    columns=flexible,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
 }
 
 % Section formatting
@@ -148,19 +152,23 @@ This structure follows Roku development best practices and supports the complete
 Roku channels follow a modified MVC pattern adapted for SceneGraph framework. The Model layer handles data management through repositories and API services. The View layer consists of SceneGraph XML components defining UI structure and layout. The Controller layer uses centralized BrightScript logic attached to MainScene for coordinating application flow and handling cross-component communication.
 
 \subsection{Model Layer}
-Located in \texttt{src/components/tasks/} for HTTP communication (httpTask) and \texttt{src/components/models/} for data structures. Models handle API communication, business logic, and data serialization. BaseModel classes provide common functionality for data validation and transformation. Repository classes manage data access and caching strategies for optimal performance on Roku devices.
+Located in \texttt{src/components/tasks/} for HTTP communication (httpTask) and \texttt{src/components/models/} for data structures. Models handle API communication, business logic, and data serialization.
+
+BaseModel classes provide common functionality for data validation and transformation. Repository classes manage data access and caching strategies for optimal performance on Roku devices.
 
 \subsection{View Layer}
 SceneGraph XML files in \texttt{src/components/views/} define the visual structure and layout. Each view component has corresponding BrightScript files for initialization and basic UI logic. Views communicate through observer patterns and field binding, maintaining separation from business logic.
 
 \subsection{Controller Layer}
-Located in \texttt{src/components/uiLogic/}, BrightScript scripts attached to MainScene manage application-wide coordination through observers. Controllers handle ItemFocused and ItemSelected events from UI components, manage ScreenStack for navigation flow between views, coordinate analytics tracking across the channel, manage TextToSpeech parsing for accessibility, and orchestrate the overall application state and transitions.
+Located in \texttt{src/components/uiLogic/}, BrightScript scripts attached to MainScene manage application-wide coordination through observers. Controllers handle ItemFocused and ItemSelected events from UI components, manage ScreenStack for navigation flow between views.
+
+Additionally, controllers coordinate analytics tracking across the channel, manage TextToSpeech parsing for accessibility, and orchestrate the overall application state and transitions.
 
 This architecture ensures maintainable code organization while leveraging Roku's SceneGraph strengths for TV interface development.
 
 
-% UI Components Analysis
-\section{UI Components Analysis}
+% Core Development
+\section{Core Development}
 \label{sec:ui-components}
 
 \subsection{Base Components}
@@ -169,7 +177,7 @@ This architecture ensures maintainable code organization while leveraging Roku's
 Base components provide the foundational building blocks for the entire application. All other components extend or utilize these base components to ensure consistency and code reuse.
 
 \begin{center}
-\small
+\scriptsize
 \begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
 \textbf{Component} & \textbf{Description} \\
@@ -185,15 +193,14 @@ BaseTask & Base task component providing helpers, utils, and constants that exte
 
 \subsection{UI Components}
 \begin{center}
-\small
+\scriptsize
 \begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
 \textbf{Component} & \textbf{Description} \\
 \midrule
 AppHeader & Reusable header component with brand logo and optional search functionality \\
 HeroBanner & Promotional section for both VOD and live content discovery \\
-TileGrid & Container component for organizing tiles in grid layout \\
-BaseTile & Base component with common tile functionality (image, title, metadata) \\
+Grid & Container component for organizing tiles in grid layout \\
 ChannelTile & Live channel display tile with favorite indicators and "LIVE" status \\
 SearchResultTile & Search result display tile with standard media metadata \\
 EpisodeTile & Episode display tile with duration and episode information \\
@@ -206,48 +213,21 @@ LoadingIndicator & Loading spinner with text for async operations \\
 \end{tabular}
 \end{center}
 
-\subsection{Service Components}
-Non-visual components that provide business logic, services, and utilities throughout the application:
-
-\begin{center}
-\small
-\begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
-\toprule
-\textbf{Component} & \textbf{Description} \\
-\midrule
-Repository & Data access layer coordinating HTTP operations and model transformations with caching strategies \\
-TTSManager & Accessibility service providing audio narration for UI elements and content descriptions \\
-Analytics & Tracking service for user interactions, screen views, and performance metrics \\
-CacheManager & Data caching system for API responses and content optimization \\
-AuthService & Authentication handling for user sessions and API authorization \\
-ConfigManager & Application configuration management for settings and feature flags \\
-Logger & Debugging and logging utility for development and production monitoring \\
-DeepLinkHandler & URL routing service for external link navigation and content discovery \\
-\bottomrule
-\end{tabular}
-\end{center}
-
 \subsection{View Components}
 The main UI Components table shows how each view utilizes the UI components:
 
 \begin{center}
-\small
+\scriptsize
 \begin{longtable}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
 \textbf{View} & \textbf{Components} \\
 \midrule
-HomeView & AppHeader, HeroBanner, TileGrid, ChannelTile \\
-\midrule
+HomeView & AppHeader, HeroBanner, Grid, ChannelTile \\
 LiveShowView & AppHeader, PlaybackControls, ContentDetails \\
-\midrule
-SearchView & SearchBox, Keyboard, TileGrid, SearchResultTile \\
-\midrule
+SearchView & SearchBox, Keyboard, Grid, SearchResultTile \\
 VodEpisodeView & AppHeader, PlaybackControls, ContentDetails \\
-\midrule
-VodShowView & AppHeader, ContentDetails, TileGrid, EpisodeTile \\
-\midrule
+VodShowView & AppHeader, ContentDetails, Grid, EpisodeTile \\
 LoadingView & AppHeader, LoadingIndicator \\
-\midrule
 ErrorView & Basic error display \\
 \bottomrule
 \caption{UI Components Breakdown}
@@ -255,112 +235,116 @@ ErrorView & Basic error display \\
 \end{longtable}
 \end{center}
 
+\subsection{Utils}
+\label{sec:utils}
+
+Utility functions provide common helper methods and reusable functionality across the application. These are typically organized in namespace structures for better code organization.
+
 \begin{center}
-\small
-\begin{tabular}{@{}lc@{}}
+\scriptsize
+\begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
-\textbf{Component} & \textbf{Used in Views} \\
+\textbf{Utility} & \textbf{Description} \\
 \midrule
-AppHeader & 5 views \\
-TileGrid & 3 views \\
-BaseTile & 3 views \\
-ChannelTile & 1 view \\
-SearchResultTile & 1 view \\
-EpisodeTile & 1 view \\
-ContentDetails & 3 views \\
-PlaybackControls & 2 views \\
-LoadingIndicator & 1 view \\
-HeroBanner & 1 view \\
-SearchBox & 1 view \\
-Keyboard & 1 view \\
+TypeGuard & Type validation utility for arrays, objects, strings, and nodes to ensure correct data types \\
+LayoutUtils & Layout positioning and sizing calculations for responsive design \\
+DeviceUtils & Device capability detection and hardware-specific configurations \\
+MathUtils & Mathematical calculations and number formatting utilities \\
+TextUtils & String manipulation, formatting, and text processing helper functions \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Constants}
+\label{sec:constants}
+
+Constants define application-wide values and configurations that remain consistent throughout the channel lifecycle.
+
+\begin{center}
+\scriptsize
+\begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
+\toprule
+\textbf{Constant Type} & \textbf{Description} \\
+\midrule
+Font Sizes & Standardized typography scale for consistent text rendering \\
+Color Palette & Brand colors and theme definitions for UI consistency \\
+Screen Dimensions & Standard layout measurements and responsive breakpoints \\
+API Endpoints & Base URLs and service endpoint configurations \\
+Timeout Values & Network request and operation timeout specifications \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 % Focus Handling
-\section{Focus Handling}
+\subsection{Focus Handling}
 \label{sec:focus-handling}
 
 Focus management is a critical aspect of Roku application development, as users navigate through the interface using remote control directional keys. The Roku framework provides a robust focus handling system centered around the \texttt{onKeyEvent} function and native built-in navigation.
 
-\subsection{The onKeyEvent Function}
+\subsubsection{The onKeyEvent Function}
 \label{sec:onkeyevent}
 
 The \texttt{onKeyEvent} function is the primary mechanism for handling remote control input in Roku applications. This function receives two parameters: \texttt{key} (string) containing the key name ("OK", "back", "up", "down", etc.) and \texttt{press} (boolean) indicating whether it's a press or release event. The function should return \texttt{true} to consume the event or \texttt{false} to allow it to bubble up to parent components. Always check \texttt{press = true} to handle only key press events and avoid duplicate actions.
 
-\subsection{Native Component Navigation}
+\subsubsection{Native Component Navigation}
 \label{sec:native-navigation}
 
 Roku's native components like \texttt{RowList}, \texttt{MarkupList}, \texttt{MarkupGrid}, \texttt{TargetGroup}, \texttt{ButtonGroup}, and \texttt{LabelList} provide built-in navigation handling that automatically manages focus transitions without requiring custom \texttt{onKeyEvent} implementations. Simply assign focus to these components using \texttt{componentName.setFocus(true)} and they will handle all directional navigation, focus boundaries, visual indicators, and scroll behavior internally. This approach reduces code complexity while ensuring consistent navigation patterns optimized for TV interfaces.
 
 % ScreenStack Management
-\section{ScreenStack Management}
+\subsection{ScreenStack Management}
 \label{sec:screenstack}
 
-\subsection{ScreenStack Overview}
+\subsubsection{ScreenStack Overview}
 ScreenStack is custom navigation logic that needs to be developed to manage screen transitions and maintain navigation history. It handles the back button functionality and provides a consistent navigation experience across the channel.
-
-\begin{lstlisting}[caption=ScreenStack Implementation Example]
-' Push new screen to stack
-screenData = { contentId: "12345", title: "Episode Details" }
-screenStack.Push("EpisodeScreen", screenData)
-
-' Handle back button (automatic)
-' ScreenStack automatically pops current screen on back press
-
-' Observe screen changes
-screenStack.observeField("currentScreen", "onScreenChanged")
-
-sub onScreenChanged()
-  currentScreen = m.screenStack.currentScreen
-  ' Handle screen transition logic
-end sub
-\end{lstlisting}
 
 % API Services
 \section{API Services}
 \label{sec:api-services}
 
-The API service layer provides structured HTTP communication and data management components for external service integration. The flow follows a circular pattern: View $\rightarrow$ HttpNode $\rightarrow$ Repository $\rightarrow$ HttpTask $\rightarrow$ HttpNode $\rightarrow$ View.
+The API service layer provides structured HTTP communication and data management components for external service integration. Critical to performance, JSON parsing must be performed in the Task Thread to avoid blocking the SceneGraph Thread. Roku devices have a limitation of 50-100 concurrent Task nodes, requiring careful thread management and pooling strategies.
+
+The flow follows a circular pattern: View $\rightarrow$ HttpNode $\rightarrow$ Repository $\rightarrow$ HttpTask $\rightarrow$ HttpNode $\rightarrow$ View.
 
 \begin{lstlisting}[caption=API Services Flow Implementation]
 ' View -> HttpNode (Request)
-httpNode.request = { url: "/episodes", method: "GET" }
+HttpNode.request = { url: "/episodes", method: "GET" }
+HttpNode.observeField("response", "onHttpNodeResponse")
 
 ' HttpNode -> Repository
-repository.callFunc("fetch", { httpNode: httpNode })
+repository.callFunc("fetch", { HttpNode: HttpNode })
 
 ' Repository -> HttpTask
-httpTask.requestData = {
-  url: "https://api.example.com/episodes",
-  httpNode: httpNode
+httpTask.request = {
+    url: "https://api.example.com/episodes",
+    HttpNode: HttpNode
 }
 
 ' HttpTask processing (background)
 while true
-  msg = wait(0, m.port)
-  msgType = type(msg)
+    msg = wait(0, m.port)
+    msgType = type(msg)
 
-  if msgType = "roSGNodeEvent"
-    ' New request - escape chars and add headers
-    request = msg.getData()
-    request.url = escapeUrl(request.url)
-    request.headers = addAuthHeaders(request.headers)
-    processRequest(request)
+    if msgType = "roSGNodeEvent"
+        ' Handle request - add headers, certificates and escape urls
+        request = msg.getData()
+        request.url = escapeUrl(request.url)
+        request.headers = addAuthHeaders(request.headers)
+        processRequest(request)
 
-  else if msgType = "roUrlEvent"
-    ' Response received - parse JSON and create models
-    response = ParseJson(msg.getString())
-    model = CreateContentModel(response)
+    else if msgType = "roUrlEvent"
+        ' Handle response received - parse JSON and create models
+        response = ParseJson(msg.getString())
+        model = CreateContentModel(response)
 
-    ' HttpTask -> HttpNode (Response)
-    targetHttpNode.response = model
-  end if
+        ' HttpTask -> HttpNode (Response)
+        targetHttpNode.response = model
+    end if
 end while
 
 ' HttpNode -> View (Response)
 sub onHttpNodeResponse()
-  m.homeView.content = m.httpNode.response.items
+    m.homeView.content = m.HttpNode.response.items
 end sub
 \end{lstlisting}
 
@@ -370,19 +354,38 @@ end sub
 Handles individual HTTP requests with URL, headers, and request body configuration. Manages request lifecycle and response parsing for REST API calls.
 
 \subsection{HttpNode}
-\label{sec:httpnode}
+\label{sec:HttpNode}
 
-SceneGraph node wrapper for HTTP operations that bridges Roku's task-based architecture with HTTP functionality. Manages multiple HttpTasks and provides observable response handling.
+Content node that serves as a bridge between the SceneGraph Thread and Task Thread for HTTP operations. This component avoids Rendezvous patterns, which are not recommended for Roku apps when transferring large data objects through AssocArrays. HttpNode manages multiple HttpTasks and provides observable response handling while maintaining thread safety.
 
-\subsection{BaseModel}
-\label{sec:basemodel}
+\subsection{Model}
+\label{sec:model}
 
-Abstract data model providing common serialization, validation, and property mapping for API response objects. Standardizes data transformation between JSON and Roku objects.
+ContentNode that serves as a template for organizing data by setting fields for later use in Grids or VideoPlayer components. This approach is recommended by Roku for faster node creation and efficient data management. Models provide common serialization, validation, and property mapping for API response objects, standardizing data transformation between JSON and Roku objects.
 
 \subsection{Repository}
 \label{sec:repository}
 
-Data access layer that coordinates HttpNode operations and BaseModel transformations. Implements caching, error handling, and provides clean API interface for business logic components.
+Data access layer responsible for initializing HttpTask component and coordinating API communication. Repository handles URL mapping, API key injection, HTTP method configuration (GET, POST), ModelType specification, and request queuing. This component is attached to MainScene and serves as the central coordination point between HttpTask, HttpNodes and Views, providing a clean API interface for business logic components.
+
+\section{Grids \& Tiles}
+\subsection{Grids}
+Browsing is one of the most important feature in Roku apps, which is why using a native component as \texttt{RowList} component is recommended. This component provides essential benefits: efficient memory management, built-in navigation handling for both vertical rows and horizontal items, and event support through \texttt{rowItemFocused} and \texttt{rowItemSelected}.
+
+\subsection{Tiles}
+Tiles serve as foundational display components following an inheritance pattern. A \texttt{BaseTile} component establishes common functionality (image, title, metadata, helpers, utils) while specialized tiles like \texttt{ChannelTile} and \texttt{EpisodeTile} extend it with specific features and layouts.
+
+
+\section{VideoView \& Playback}
+Video playback is the core feature of Roku apps, making the VideoPlayer the most critical component. It must seamlessly handle Live and VOD streaming, individual content items, and playlists.
+
+The recommended architecture suggests a VideoView wrapper that exposes essential events (\texttt{control}, \texttt{state}, \texttt{position}, \texttt{duration}) and playlist parameters: \texttt{jumpToItem}, \texttt{currentIndex}, \texttt{isContentList}. This wrapper enables future implementations as:
+
+\begin{itemize}
+    \item Custom UI development for metadata display and progress bar
+    \item Trickplay functionality (rewind, fast-forward, seek)
+    \item Roku Advertising Framework (RAF) integration
+\end{itemize}
 
 % Certification Process
 \section{Certification Process}
@@ -391,15 +394,31 @@ Data access layer that coordinates HttpNode operations and BaseModel transformat
 The Roku certification process ensures channels meet platform standards for functionality, performance, and user experience before publication to the Roku Channel Store.
 
 \subsection{Certification Requirements}
-TBD - Confirm criteria for Apps and Channels on Roku platform including:
-\begin{itemize}
-    \item Content guidelines and compliance standards
-    \item Technical performance requirements and testing protocols
-    \item User interface and accessibility compliance
-    \item Security and privacy policy adherence
-    \item Channel metadata and artwork specifications
-    \item Deep linking and search integration requirements
-\end{itemize}
+
+Roku certification ensures channels meet platform standards across multiple criteria areas.
+
+The complete certification requirements are available at:
+\url{https://developer.roku.com/docs/developer-program/certification/certification.md}
+
+\subsubsection{Certification Criteria Overview}
+The certification process evaluates channels across the following areas:
+\begin{enumerate}
+    \item Advertising
+    \item Purchases
+    \item Performance
+    \item Channel Operation
+    \item Deep Linking
+    \item UI and Graphics
+\end{enumerate}
+
+\subsubsection{Free App Certification Focus}
+It should first identify the app type and features to determine relevant certification requirements. For example, a \textbf{Free App without Advertising, Purchases, or Deep Linking} would focus on the following applicable criteria:
+
+\textbf{3. Performance:} Memory optimization, startup performance, and thread management to ensure smooth operation across all Roku device tiers.
+
+\textbf{4. Channel Operation:} Navigation flow, error handling, content playback reliability, and proper remote control integration for seamless user experience.
+
+\textbf{6. UI and Graphics:} Visual consistency, accessibility compliance, and adherence to Roku design guidelines for professional channel presentation.
 
 \subsection{Submission Process}
 The certification workflow involves channel package preparation, testing validation, and Roku review process for final approval and Channel Store publication.

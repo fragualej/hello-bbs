@@ -26,9 +26,7 @@
 \addtolength{\topmargin}{-1.59999pt}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\textbf{Daystar Roku App}}
 \fancyhead[R]{\thepage}
-\fancyfoot[C]{\textit{Confidential and Proprietary}}
 
 % Hyperref setup
 \hypersetup{
@@ -118,6 +116,18 @@ The project is structured as a 3-month development cycle organized into 6 two-we
 % Development Setup & Foundation
 \section{Development Setup \& Foundation}
 \label{sec:development-setup}
+
+
+\subsection{Required Hardware \& Tools}
+The development process requires the following hardware devices and testing tools:
+\begin{itemize}
+    \item \textbf{Roku Streaming Stick:} Primary testing device for channel development and deployment validation (\href{https://www.amazon.com/Streaming-Dispositivo-control-controles-renovado/dp/B09X5DL9S5/ref=sr_1_1_sspa?__mk_es_US=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2R6U7LCGCRPQ4&dib=eyJ2IjoiMSJ9.TRH5bXnlx5501YwqrZmVIKt0hBIQuSG06EBYNqqx8spkF4HWtu8iLFT_-GwS2ecf3xCTIrKzixktw_WPmrXixzb5Nv4Tar-vDfAd1h2fvTjxUZluOryzGO6cVkAofQZj0Y4nQEhfYSdqHzOEdDEiUZg8_iXGDYdNOotMoNv_lRCQop_ZL9KmuHOfXnIFA87np1Dh0I3TH3sC9Cq_bCOVuxvWtpy_NR3JY3sME42NybQ.MXFqmDZbn7GOjml9UDvE2hlKBNLy-vj5rB74LK7I7jk&dib_tag=se&keywords=roku+streaming+stick+4K&qid=1759005773&sprefix=roku+streaming+stick+%2Caps%2C842&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1}{Amazon Link})
+    \item \textbf{Video Capture Card:} Hardware solution for recording and analyzing video output during testing phases (\href{https://www.amazon.com/-/es/gp/product/B08QJ84JNP/ref=ewc_pr_img_1?smid=A3IK7HWRZCAKOB&th=1}{Amazon Link})
+    \item \textbf{Router:} Network infrastructure for creating controlled testing environments and traffic analysis (\href{https://www.amazon.com/-/es/GL-iNet-GL-MT300N-V2-bolsillo-inal%C3%A1mbrico-port%C3%A1til/dp/B073TSK26W/ref=sr_1_1?dib=eyJ2IjoiMSJ9.hs1OPJDykvs6nbvLopN23SPzCT-a44RdsttmR8laU4JsAlNPn0uUU3A051Lk8gOAaLLVTF1eudr67loelt9DI_GCWZNjOJBop3JGmonB4vBRqfWC0OZHj9yq2KKAHU0fjqF9l1OjQFPQ-bQkZGtnVFgcdh2Rj4Csq7lA-4Fj_72reVCb8NxXP7bKwolWlbhRfwT7ihxxaol2xX2qQt4isxrp6vAsZquXzMfXkzO-N-V7s3AnRcLxZf2NcA7EwCrlHsfG3EQgMUJp57QGbbcQP-GLa6HmnLc4f3-ibiSG5ds.lwp8NSJElSCtUnQ_ko5R44N7FN3UtYSiIRIR85hJkaA&dib_tag=se&keywords=Mango+Router&qid=1759005839&sr=8-1}{Amazon Link})
+    \item \textbf{VPN Service:} Secure tunneling for geo-location testing and regional content validation
+    \item \textbf{Charles Proxy License:} Professional HTTP debugging tool for API communication analysis and network monitoring (\href{https://www.charlesproxy.com/}{Official Website})
+\end{itemize}
+
 
 \subsection{Version Control with Gitflow}
 The project uses Git with Gitflow branching model for organized development:

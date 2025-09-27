@@ -19,13 +19,19 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\usepackage{soul}
+\usepackage{colortbl}
+\usepackage{changepage}
+\usepackage{threeparttable}
+\usepackage{arydshln}
 
 % Page setup
 \setlength{\headheight}{13.59999pt}
 \addtolength{\topmargin}{-1.59999pt}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\textbf{RFP Response}}
+\fancyhead[L]{\textbf{Daystar Roku App}}
 \fancyhead[R]{\thepage}
 \fancyfoot[C]{\textit{Confidential and Proprietary}}
 
@@ -47,7 +53,7 @@
 
 % Listings configuration
 \lstset{
-    basicstyle=\ttfamily\scriptsize,
+    basicstyle=\ttfamily\tiny,
     commentstyle=\color{darkgray},
     keywordstyle=\color{primaryblue}\bfseries,
     breaklines=true,
@@ -86,6 +92,30 @@
 \newpage
 \tableofcontents
 \newpage
+
+% Project Summary
+\section{Project Summary}
+\label{sec:summary}
+
+This document presents a comprehensive technical proposal for developing a Roku channel application using modern development practices and industry best standards. The project encompasses a complete development lifecycle from initial setup through certification and deployment.
+
+\subsection{Project Scope}
+The Daystar Roku App development project focuses on creating a robust OTT (Over-The-Top) streaming application optimized for the Roku platform. The solution implements a scalable architecture supporting both Live and Video-on-Demand (VOD) content delivery with professional-grade user experience and performance optimization.
+
+\subsection{Technical Approach}
+The development follows a structured MVC (Model-View-Controller) architecture specifically adapted for Roku's SceneGraph framework. Core technologies include BrightScript for application logic, XML-based SceneGraph components for UI development, and modern tooling with BrighterScript compiler for enhanced development efficiency.
+
+\subsection{Key Features}
+\begin{itemize}
+    \item \textbf{Content Browsing:} Efficient grid-based navigation using native RowList components for optimal memory management
+    \item \textbf{Video Playback:} Comprehensive VideoView wrapper supporting Live/VOD streaming, playlists, and advanced controls
+    \item \textbf{API Integration:} Robust HTTP service layer with task-based threading and JSON parsing optimization
+    \item \textbf{Focus Management:} Native component navigation leveraging Roku's built-in focus handling system
+    \item \textbf{Performance Optimization:} Memory-efficient architecture designed for Roku's hardware constraints
+\end{itemize}
+
+\subsection{Development Timeline}
+The project is structured as a 3-month development cycle organized into 6 two-week sprints, covering foundation setup, core development, API services integration, content management, deployment optimization, and certification preparation.
 
 % Development Setup & Foundation
 \section{Development Setup \& Foundation}
@@ -176,7 +206,8 @@ This architecture ensures maintainable code organization while leveraging Roku's
 
 Base components provide the foundational building blocks for the entire application. All other components extend or utilize these base components to ensure consistency and code reuse.
 
-\begin{center}
+\begin{table}[H]
+\centering
 \scriptsize
 \begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
@@ -189,10 +220,13 @@ BaseModel & Base data model providing common serialization, validation, and prop
 BaseTask & Base task component providing helpers, utils, and constants that extended tasks inherit \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\small Base Components}
+\label{tab:base-components}
+\end{table}
 
 \subsection{UI Components}
-\begin{center}
+\begin{table}[H]
+\centering
 \scriptsize
 \begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
@@ -211,14 +245,17 @@ Keyboard & On-screen keyboard input system for TV/remote interfaces \\
 LoadingIndicator & Loading spinner with text for async operations \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\small UI Components}
+\label{tab:ui-components-list}
+\end{table}
 
 \subsection{View Components}
 The main UI Components table shows how each view utilizes the UI components:
 
-\begin{center}
+\begin{table}[H]
+\centering
 \scriptsize
-\begin{longtable}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
+\begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
 \textbf{View} & \textbf{Components} \\
 \midrule
@@ -230,17 +267,18 @@ VodShowView & AppHeader, ContentDetails, Grid, EpisodeTile \\
 LoadingView & AppHeader, LoadingIndicator \\
 ErrorView & Basic error display \\
 \bottomrule
-\caption{UI Components Breakdown}
+\end{tabular}
+\caption{\small UI Components Breakdown}
 \label{tab:ui-components}
-\end{longtable}
-\end{center}
+\end{table}
 
 \subsection{Utils}
 \label{sec:utils}
 
 Utility functions provide common helper methods and reusable functionality across the application. These are typically organized in namespace structures for better code organization.
 
-\begin{center}
+\begin{table}[H]
+\centering
 \scriptsize
 \begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
@@ -253,14 +291,17 @@ MathUtils & Mathematical calculations and number formatting utilities \\
 TextUtils & String manipulation, formatting, and text processing helper functions \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\small Utility Functions}
+\label{tab:utils}
+\end{table}
 
 \subsection{Constants}
 \label{sec:constants}
 
 Constants define application-wide values and configurations that remain consistent throughout the channel lifecycle.
 
-\begin{center}
+\begin{table}[H]
+\centering
 \scriptsize
 \begin{tabular}{@{}p{0.25\textwidth}p{0.70\textwidth}@{}}
 \toprule
@@ -273,7 +314,9 @@ API Endpoints & Base URLs and service endpoint configurations \\
 Timeout Values & Network request and operation timeout specifications \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{\small Constants}
+\label{tab:constants}
+\end{table}
 
 % Focus Handling
 \subsection{Focus Handling}
@@ -305,48 +348,6 @@ ScreenStack is custom navigation logic that needs to be developed to manage scre
 The API service layer provides structured HTTP communication and data management components for external service integration. Critical to performance, JSON parsing must be performed in the Task Thread to avoid blocking the SceneGraph Thread. Roku devices have a limitation of 50-100 concurrent Task nodes, requiring careful thread management and pooling strategies.
 
 The flow follows a circular pattern: View $\rightarrow$ HttpNode $\rightarrow$ Repository $\rightarrow$ HttpTask $\rightarrow$ HttpNode $\rightarrow$ View.
-
-\begin{lstlisting}[caption=API Services Flow Implementation]
-' View -> HttpNode (Request)
-HttpNode.request = { url: "/episodes", method: "GET" }
-HttpNode.observeField("response", "onHttpNodeResponse")
-
-' HttpNode -> Repository
-repository.callFunc("fetch", { HttpNode: HttpNode })
-
-' Repository -> HttpTask
-httpTask.request = {
-    url: "https://api.example.com/episodes",
-    HttpNode: HttpNode
-}
-
-' HttpTask processing (background)
-while true
-    msg = wait(0, m.port)
-    msgType = type(msg)
-
-    if msgType = "roSGNodeEvent"
-        ' Handle request - add headers, certificates and escape urls
-        request = msg.getData()
-        request.url = escapeUrl(request.url)
-        request.headers = addAuthHeaders(request.headers)
-        processRequest(request)
-
-    else if msgType = "roUrlEvent"
-        ' Handle response received - parse JSON and create models
-        response = ParseJson(msg.getString())
-        model = CreateContentModel(response)
-
-        ' HttpTask -> HttpNode (Response)
-        targetHttpNode.response = model
-    end if
-end while
-
-' HttpNode -> View (Response)
-sub onHttpNodeResponse()
-    m.homeView.content = m.HttpNode.response.items
-end sub
-\end{lstlisting}
 
 \subsection{HttpTask}
 \label{sec:httptask}
@@ -387,6 +388,21 @@ The recommended architecture suggests a VideoView wrapper that exposes essential
     \item Roku Advertising Framework (RAF) integration
 \end{itemize}
 
+% Deployment & Optimization
+\section{Deployment \& Optimization}
+\label{sec:deployment}
+
+The deployment phase involves creating the final channel package and optimizing performance for submission to the Roku Channel Store. This critical phase ensures the application meets production standards and certification requirements.
+
+\subsection{Package Creation}
+The deployment process begins with generating a signed channel package using a Roku device. The channel must be side-loaded and thoroughly tested on actual hardware to validate functionality across different Roku device models and firmware versions. This step verifies that all components work correctly in the production environment.
+
+\subsection{Performance Optimization}
+Prior to certification submission, the channel undergoes comprehensive optimization including memory usage analysis, startup time improvements, and UI responsiveness testing. Performance metrics must meet Roku's standards for smooth operation across all supported device tiers, from entry-level to premium models.
+
+\subsection{Pre-Certification Validation}
+The final package is validated against Roku's certification criteria, ensuring compliance with technical requirements, UI guidelines, and content standards. This includes testing navigation patterns, error handling, and accessibility features to guarantee a seamless user experience before official submission.
+
 % Certification Process
 \section{Certification Process}
 \label{sec:certification}
@@ -423,10 +439,30 @@ It should first identify the app type and features to determine relevant certifi
 \subsection{Submission Process}
 The certification workflow involves channel package preparation, testing validation, and Roku review process for final approval and Channel Store publication.
 
-% Appendices
-\section{Appendices}
-\label{sec:appendices}
+% Project Roadmap
+\section{Project Roadmap}
+\label{sec:roadmap}
 
-Supporting documentation and additional materials.
+The following roadmap outlines the development phases and key milestones for the Roku channel implementation over 3 months, organized into 6 sprints (2 sprints per month) based on the main project sections.
+
+\begin{table}[H]\centering
+\resizebox{\textwidth}{!}{
+\scriptsize
+\begin{tabular}{l:c:c:c:c:c:c}\toprule
+\multicolumn{7}{c}{\textbf{Project Timeline}} \\\midrule
+\textbf{Tasks} &\textbf{S1} &\textbf{S2} &\textbf{S3} &\textbf{S4} &\textbf{S5} &\textbf{S6} \\\midrule
+Development Setup \& Foundation &\cellcolor[HTML]{A8A8A8} & & & & & \\\hdashline
+Core Development I & &\cellcolor[HTML]{A8A8A8} & & & & \\\hdashline
+Core Development II & & &\cellcolor[HTML]{A8A8A8} & & & \\\hdashline
+API Services & & & &\cellcolor[HTML]{A8A8A8} & & \\\hdashline
+Grids \& Tiles & & & & &\cellcolor[HTML]{A8A8A8} & \\\hdashline
+VideoView \& Playback & & & & &\cellcolor[HTML]{A8A8A8} & \\\hdashline
+Deployment \& Optimization & & & & & &\cellcolor[HTML]{A8A8A8} \\\hdashline
+Certification Process & & & & & &\cellcolor[HTML]{A8A8A8} \\
+\bottomrule
+\end{tabular}
+}
+\caption{Project Roadmap Matrix}\label{tab:roadmap}
+\end{table}
 
 \end{document}
